@@ -3,6 +3,7 @@ require_relative 'lib/ship'
 require_relative 'lib/cruiser'
 require_relative 'lib/battleship'
 require_relative 'lib/destroyer'
+require_relative 'lib/submarine'
 require_relative 'lib/board'
 
 class Game
@@ -11,6 +12,7 @@ class Game
 
   def initialize
     @player = Player.new
+    Board.insert_all_ships
   end
 
   def play
@@ -28,9 +30,10 @@ class Game
       puts "#{e}, Please try again"
       play
     rescue Player::NoShotsLeftError => e
-      puts "Game over, you ran out of ammo"
+      puts Board.to_s
+      puts "You lose, No ammo left"
     end
-    puts "You win!"
+    puts "You win, all ships destroyed" if Board.remaining_ships == [] 
   end
 
   private

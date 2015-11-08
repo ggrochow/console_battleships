@@ -1,3 +1,4 @@
+require 'pry'
 class Board
   class OffBoardError < StandardError
   end
@@ -9,65 +10,123 @@ class Board
   BATTLESHIP = Battleship.new
   DESTROYER  = Destroyer.new
   CRUISER    = Cruiser.new
+  SUBMARINE  = Submarine.new
   EMPTY      = nil
 
-  BOARD_KEY  = { 'B' => BATTLESHIP, 'D' => DESTROYER, 'C' => CRUISER, '~' => EMPTY }
+  BOARD_KEY  = { 'B' => BATTLESHIP, 'D' => DESTROYER, 'C' => CRUISER, 'S' => SUBMARINE, '~' => EMPTY }
 
-  # The grid below represents the game grid. It's a hash of arrays of strings.
-  # Don't let the weird syntax confuse you. It's just a fancy way of defining an array of strings. 
-  # Each row is actual an array of strings. Each spot is either empty (~) or has a ship: Battleship (B), Destroyer(D), or Cruiser(C).
-
-  GRID = {
-    #     0 1 2 3 4 5 6 7 8 9
-    A: %w{~ ~ ~ C ~ ~ ~ B ~ ~},
-    B: %w{~ ~ ~ C ~ ~ ~ B ~ ~},
-    C: %w{~ ~ ~ ~ ~ ~ ~ B ~ ~},
-    D: %w{~ ~ ~ ~ ~ ~ ~ B ~ ~},
-    E: %w{~ ~ C C ~ ~ ~ ~ ~ ~},
-    F: %w{~ ~ ~ ~ ~ D D D D ~},
-    G: %w{~ ~ ~ ~ ~ ~ ~ ~ ~ ~}
-  }
+  GRID = [
+    %w{~ ~ ~ ~ ~ ~ ~ ~ ~ ~},
+    %w{~ ~ ~ ~ ~ ~ ~ ~ ~ ~},
+    %w{~ ~ ~ ~ ~ ~ ~ ~ ~ ~},
+    %w{~ ~ ~ ~ ~ ~ ~ ~ ~ ~},
+    %w{~ ~ ~ ~ ~ ~ ~ ~ ~ ~},
+    %w{~ ~ ~ ~ ~ ~ ~ ~ ~ ~},
+    %w{~ ~ ~ ~ ~ ~ ~ ~ ~ ~}
+  ]
 
   class << self
+    def to_s
+      strings = GRID.clone
+      row_reference = ('A'..'G').to_a.insert(0, "*")
+      strings.insert(0, ((1..10).to_a)) # Adds column indicators
+      strings.map.with_index do |array, index|
+        cloned_array = array.clone # clones array so attempt_map doenst get modified
+        cloned_array.insert(0, (row_reference[index])) # Adds row indicators
+        cloned_array.join("  ")
+      end.join("\n")
+    end
 
-    def play(position) 
+    def play(position)
+      raise OffBoardError, "Guess cannot be empty" if position.empty?
       row = get_row(position)
       column = get_column(position)
-      validiate_coordinates(row,column)
-      # Returning new ships each time feels wrong
+      validiate_coordinates(position)
       target = BOARD_KEY[GRID[row][column]]
       target.hit unless target.nil?
       target
     end
 
     def all_ships
-      [BATTLESHIP, DESTROYER, CRUISER]
+      [BATTLESHIP, DESTROYER, CRUISER, SUBMARINE]
     end
 
     def remaining_ships
       all_ships.select { |ship| ship.alive? }
     end
 
+    def insert_all_ships
+      all_ships.each do |ship|
+        insert_ship(ship)
+      end
+    end
+
     private
+    def insert_ship(ship)
+      begin
+        start_position = [random_row, random_column]
+        end_position = start_position
+        positions = [start_position]
+        direction = random_direction
+        ship.length.times do
+          case direction
+          when 'up'
+            end_position[0] += 1
+            position_empty(end_position)
+            positions << end_position.clone
+          when 'right'
+            end_position[1] += 1
+            position_empty(end_position)
+            positions << end_position.clone
+          end
+        end
+        positions.each do |coordinates|
+          GRID[coordinates[0]][coordinates[1]] = ship.symbol
+        end
+      rescue OffBoardError
+        insert_ship(ship)
+      end
+    end
+    
+    def random_direction
+      ["up", "right"].sample
+    end
 
     def random_position
       random_row + random_column.to_s
     end
 
     def random_row
-      ("A".."G").to_a.sample
+      (0..6).to_a.sample
     end
 
     def random_column
-      (MIN_X..MAX_X).to_a.sample
+      (0..9).to_a.sample
     end
 
-    def validiate_coordinates(row, column)
-      raise OffBoardError, "Play #{row}#{column + 1} off board" unless valid_row?(row) && valid_column?(column)
+    def position_empty(pos)
+      if GRID[pos[0]].nil? || GRID[pos[0]][pos[1]] != "~"
+        raise OffBoardError
+      end
+    end
+
+    def validiate_coordinates(guess)
+      row = get_row(guess)
+      column = get_column(guess)
+      raise OffBoardError, "Play #{guess} off board" unless valid_row?(row) && valid_column?(column)
     end
 
     def get_row(position)
-      position[0].to_sym
+      # position[0].to_sym
+      letters_hash[position[0]]
+    end
+
+    def letters_hash
+      letters = ('A'..'G').to_a
+      letters.reduce({}) do |hash, letter|
+        hash[letter] = letters.index(letter)
+        hash
+      end
     end
 
     def get_column(position)
@@ -75,7 +134,7 @@ class Board
     end
 
     def valid_row?(row)
-      GRID.has_key?(row)
+      (0..6).include?(row)
     end
 
     def valid_column?(column)
@@ -83,5 +142,4 @@ class Board
     end
 
   end
-
 end

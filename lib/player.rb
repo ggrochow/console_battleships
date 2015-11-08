@@ -86,6 +86,7 @@ class Player
     end
 
     def shots_left?
+      raise NoShotsLeftError unless shots_fired < MAX_SHOTS
       shots_fired < MAX_SHOTS
     end
 

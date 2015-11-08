@@ -14,6 +14,6 @@ describe Cruiser do
   end
 
   it "should have 4 max_hits" do
-    expect(@cruiser.max_hits).to eq(4)
+    expect(@cruiser.max_hits).to eq(2)
   end
 end

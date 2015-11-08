@@ -10,6 +10,7 @@ end
 
 safe_require 'player'
 safe_require 'ship'
+safe_require 'submarine'
 safe_require 'cruiser'
 safe_require 'battleship'
 safe_require 'destroyer'
