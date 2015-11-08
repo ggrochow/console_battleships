@@ -19,15 +19,11 @@ class Player
       if can_fire?(coordinate)
         target = Board.play(coordinate)
         @shots_fired += 1
-        row = row_hash[coordinate[0]]
-        column = coordinate[1..-1].to_i - 1
         if target
-            @hits << coordinate
-            attempt_map[row][column] = target.symbol
-          else
-            @misses << coordinate
-            attempt_map[row][column] = "X"
-         end
+          add_hit(coordinate, target)
+        else
+          add_miss(coordinate)
+        end
         target
       else
         false
@@ -35,7 +31,14 @@ class Player
     end
 
     def display_attempts
-      attempt_map.map{|arr| arr.join("  ") }.join("\n")
+      strings = attempt_map.clone
+      row_reference = ('A'..'G').to_a.insert(0, "*")
+      strings.insert(0, ((1..10).to_a)) # Adds column indicators
+      strings.map.with_index do |array, index|
+        cloned_array = array.clone # clones array so attempt_map doenst get modified
+        cloned_array.insert(0, (row_reference[index])) # Adds row indicators
+        cloned_array.join("  ")
+      end.join("\n")
     end
 
     def shots_remaining
@@ -51,12 +54,34 @@ class Player
       shots_left? && new_target?(coordinate)
     end
 
+    def add_hit(coordinate, target)
+      row = get_row(coordinate)
+      column = get_column(coordinate)
+      @hits << coordinate
+      attempt_map[row][column] = target.symbol
+    end
+
+    def add_miss(coordinate)
+      row = get_row(coordinate)
+      column = get_column(coordinate)
+      @misses << coordinate
+      attempt_map[row][column] = "X"
+    end
+
     def row_hash
       letters = ('A'..'G').to_a
       letters.reduce({}) do |hash, letter|
         hash[letter] = letters.index(letter)
         hash
       end
+    end
+
+    def get_row(coordinate)
+      row_hash[coordinate[0]]
+    end
+
+    def get_column(coordinate)
+      coordinate[1..-1].to_i - 1
     end
 
     def shots_left?
@@ -68,14 +93,3 @@ class Player
       !all_shots.include?(coordinate)
     end
 end
-
-      # all_shots.each do | coordinate |
-      #   row = row_hash[coordinate[0]]
-      #   column = coordinate[1..-1].to_i - 1
-      #   target = Board::GRID[Board.get_row(coordinate)][column]
-      #   if target.nil?
-      #     attempt_map[row][column] = 'X'
-      #   else
-      #     attempt_map[row][column] = Board::GRID[Board.get_row(coordinate)][column]
-      #   end
-      # end
