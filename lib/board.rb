@@ -40,6 +40,15 @@ class Board
       target
     end
 
+    def all_ships
+      #      [BATTLESHIP, DESTROYER, CRUISER]
+      ships = []
+      BOARD_KEY.each_value do |ship|
+        ships << ship unless ship.nil?
+      end
+      ships
+    end
+
     private
     def validiate_coordinates(row, column)
       raise OffBoardError, "Play #{row}#{column + 1} off board" unless valid_row?(row) && valid_column?(column)

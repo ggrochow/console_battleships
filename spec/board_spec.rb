@@ -10,4 +10,11 @@ describe Board do
     end
   end
 
+  describe '.all_ships' do
+    it "should return an array of all the ship objects" do
+      expect(Board.all_ships[0]).to be_a(Battleship)
+      expect(Board.all_ships[1]).to be_a(Destroyer)
+      expect(Board.all_ships[2]).to be_a(Cruiser)
+    end
+  end
 end
