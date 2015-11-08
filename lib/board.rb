@@ -49,6 +49,10 @@ class Board
       ships
     end
 
+    def remaining_ships
+      all_ships.select { |ship| ship.alive? }
+    end
+
     private
     def validiate_coordinates(row, column)
       raise OffBoardError, "Play #{row}#{column + 1} off board" unless valid_row?(row) && valid_column?(column)

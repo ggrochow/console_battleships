@@ -17,4 +17,14 @@ describe Board do
       expect(Board.all_ships[2]).to be_a(Cruiser)
     end
   end
+
+  describe '.remaining_ships' do
+    it "should return an array containing the ships that are alive" do
+      expect(Board::BATTLESHIP).to receive(:alive?).and_return(false)
+      remaining_ships = Board.remaining_ships
+      expect(remaining_ships).to_not include(Board::BATTLESHIP)
+      expect(remaining_ships).to include(Board::CRUISER)
+      expect(remaining_ships).to include(Board::DESTROYER)
+    end
+  end
 end
