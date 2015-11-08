@@ -40,14 +40,18 @@ class Game
 
   def status_report(target)
   if target
-    puts "You hit a #{target.class}, its got #{target.max_hits - target.hits} HP left"
+    if target.alive? 
+      puts "You hit a #{target.class}, its got #{target.max_hits - target.hits} HP left"
+    else
+      puts "You hit a #{target.class}, destryoting it! #{Board.remaining_ships.size} ships left"
+    end
   else
     puts "You missed, #{player.shots_remaining} shots left"
   end
 
   end
   def get_position
-    puts "Please enter the coordinates to shoot at "
+    puts "Enter the coordinates to shoot at "
     gets.chomp
   end
 end

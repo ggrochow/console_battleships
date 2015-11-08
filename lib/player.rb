@@ -45,11 +45,12 @@ class Player
       MAX_SHOTS - shots_fired
     end
 
+    private
+
     def all_shots
       hits + misses
     end
 
-    private
     def can_fire?(coordinate)
       shots_left? && new_target?(coordinate)
     end
@@ -65,7 +66,7 @@ class Player
       row = get_row(coordinate)
       column = get_column(coordinate)
       @misses << coordinate
-      attempt_map[row][column] = "X"
+      attempt_map[row][column] = "x"
     end
 
     def row_hash

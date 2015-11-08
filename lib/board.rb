@@ -41,12 +41,7 @@ class Board
     end
 
     def all_ships
-      #      [BATTLESHIP, DESTROYER, CRUISER]
-      ships = []
-      BOARD_KEY.each_value do |ship|
-        ships << ship unless ship.nil?
-      end
-      ships
+      [BATTLESHIP, DESTROYER, CRUISER]
     end
 
     def remaining_ships
@@ -54,6 +49,19 @@ class Board
     end
 
     private
+
+    def random_position
+      random_row + random_column.to_s
+    end
+
+    def random_row
+      ("A".."G").to_a.sample
+    end
+
+    def random_column
+      (MIN_X..MAX_X).to_a.sample
+    end
+
     def validiate_coordinates(row, column)
       raise OffBoardError, "Play #{row}#{column + 1} off board" unless valid_row?(row) && valid_column?(column)
     end
