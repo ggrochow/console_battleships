@@ -10,8 +10,8 @@ describe Ship do
       expect(@ship.length).to eq(2)
     end
 
-    it "should have 5 max_shots" do
-      expect(@ship.max_shots).to eq(5)
+    it "should have 5 max_hits" do
+      expect(@ship.max_hits).to eq(5)
     end
 
     it "should have 0 hits" do
@@ -28,8 +28,8 @@ describe Ship do
       expect(@ship.length).to eq(5)
     end
 
-    it "should have 25 max_shots" do
-      expect(@ship.max_shots).to eq(25)
+    it "should have 25 max_hits" do
+      expect(@ship.max_hits).to eq(25)
     end
 
     it "should have 0 hits" do

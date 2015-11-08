@@ -13,7 +13,7 @@ describe Cruiser do
     expect(@cruiser.length).to eq(2)
   end
 
-  it "should have 4 max_shots" do
-    expect(@cruiser.max_shots).to eq(4)
+  it "should have 4 max_hits" do
+    expect(@cruiser.max_hits).to eq(4)
   end
 end

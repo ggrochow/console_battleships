@@ -13,7 +13,7 @@ describe Destroyer do
     expect(@destroyer.length).to eq(4)
   end
 
-  it "should have 4 max_shots" do
-    expect(@destroyer.max_shots).to eq(4)
+  it "should have 4 max_hits" do
+    expect(@destroyer.max_hits).to eq(4)
   end
 end

@@ -1,11 +1,14 @@
 class Ship
 
-  attr_reader :length, :max_shots, :hits
+  attr_reader :length, :max_hits, :hits
 
-  def initialize(length, max_shots)
+  def initialize(length, max_hits)
     @length = length
-    @max_shots = max_shots
+    @max_hits = max_hits
     @hits = 0
   end
 
+  def alive?
+    hits < max_hits
+  end
 end

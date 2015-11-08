@@ -13,7 +13,7 @@ describe Battleship do
     expect(@battleship.length).to eq(4)
   end
 
-  it "should have 4 max_shots" do
-    expect(@battleship.max_shots).to eq(4)
+  it "should have 4 max_hits" do
+    expect(@battleship.max_hits).to eq(4)
   end
 end
