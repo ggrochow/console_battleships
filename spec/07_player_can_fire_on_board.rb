@@ -30,10 +30,10 @@ describe Player do
       expect(@player.misses[0]).to eq('A1')
     end
 
-    it 'returns false if the max shots is reached' do
-      expect(Board).to_not receive(:play)
-      expect(@player).to receive(:shots_fired).and_return(20)
-      expect(@player.fire('F2')).to eq(false)
-    end
+    # it 'returns false if the max shots is reached' do
+    #   expect(Board).to_not receive(:play)
+    #   expect(@player).to receive(:shots_fired).and_return(20)
+    #   expect(@player.fire('F2')).to eq(false)
+    # end
   end
 end

@@ -4,7 +4,7 @@ class Player
   class DuplicateTargetError < StandardError
   end
 
-  MAX_SHOTS = 20
+  MAX_SHOTS = 25
 
   attr_reader :shots_fired, :hits, :misses, :attempt_map
 

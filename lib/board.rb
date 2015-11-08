@@ -61,14 +61,14 @@ class Board
       end
     end
 
-    private
+    private # what a mess
     def insert_ship(ship)
       begin
         start_position = [random_row, random_column]
         end_position = start_position
         positions = [start_position]
         direction = random_direction
-        ship.length.times do
+        ship.length.times do # validates all random positions possible ship placement
           case direction
           when 'up'
             end_position[0] += 1
@@ -80,10 +80,10 @@ class Board
             positions << end_position.clone
           end
         end
-        positions.each do |coordinates|
+        positions.each do |coordinates| # actually places the ships
           GRID[coordinates[0]][coordinates[1]] = ship.symbol
         end
-      rescue OffBoardError
+      rescue OffBoardError # IF it runs into an invalid position, this error is raised and process is started again
         insert_ship(ship)
       end
     end
@@ -117,7 +117,6 @@ class Board
     end
 
     def get_row(position)
-      # position[0].to_sym
       letters_hash[position[0]]
     end
 

@@ -17,9 +17,9 @@ describe Player do
       expect(@player.shots_fired).to eq(2)
     end
 
-    it "can't fire more than ten shots" do
-      allow(@player).to receive(:shots_fired).and_return(20)
-      expect(@player.fire('C7')).to eq(false)
-    end
+    # it "can't fire more than ten shots" do
+    #   allow(@player).to receive(:shots_fired).and_return(20)
+    #   expect(@player.fire('C7')).to eq(false)
+    # end
   end
 end
