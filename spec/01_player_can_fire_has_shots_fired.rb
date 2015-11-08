@@ -18,10 +18,8 @@ describe Player do
     end
 
     it "can't fire more than ten shots" do
-      (1..10).each { |n| @player.fire("B#{n}") }
-      expect(@player.shots_fired).to eq(10)
+      allow(@player).to receive(:shots_fired).and_return(20)
       expect(@player.fire('C7')).to eq(false)
-      expect(@player.shots_fired).to eq(10)
     end
   end
 end

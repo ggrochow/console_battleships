@@ -30,7 +30,7 @@ class Board
 
   class << self
 
-    def play(position)
+    def play(position) 
       row = get_row(position)
       column = get_column(position)
       validiate_coordinates(row,column)
@@ -63,7 +63,7 @@ class Board
     end
 
     def get_column(position)
-      position.gsub(/\D/, "").to_i - 1
+      position[1..-1].to_i - 1
     end
 
     def valid_row?(row)

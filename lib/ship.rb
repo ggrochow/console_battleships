@@ -1,6 +1,6 @@
 class Ship
 
-  attr_reader :length, :max_hits, :hits
+  attr_reader :length, :max_hits, :hits, :symbol
 
   def initialize(length, max_hits)
     @length = length
