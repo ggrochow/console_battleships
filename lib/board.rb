@@ -4,11 +4,14 @@ class Board
 
   MAX_X = 9
   MIN_X = 0
+
   # Types of Ship
-  BATTLESHIP = 'B'
-  DESTROYER  = 'D'
-  CRUISER    = 'C'
-  EMPTY      = '~'
+  BATTLESHIP = Battleship.new
+  DESTROYER  = Destroyer.new
+  CRUISER    = Cruiser.new
+  EMPTY      = nil
+
+  BOARD_KEY  = { 'B' => BATTLESHIP, 'D' => DESTROYER, 'C' => CRUISER, '~' => EMPTY }
 
   # The grid below represents the game grid. It's a hash of arrays of strings.
   # Don't let the weird syntax confuse you. It's just a fancy way of defining an array of strings. 
@@ -30,18 +33,14 @@ class Board
     def play(position)
       row = get_row(position)
       column = get_column(position)
-      position_on_board_check(row,column)
+      validiate_coordinates(row,column)
       # Returning new ships each time feels wrong
-      case GRID[row][column]
-      when BATTLESHIP then Battleship.new
-      when DESTROYER then Destroyer.new
-      when CRUISER then Cruiser.new
-      when EMPTY then nil
-      end
+
+      BOARD_KEY[GRID[row][column]]
     end
 
     private
-    def position_on_board_check(row, column)
+    def validiate_coordinates(row, column)
       raise OffBoardError, "Play #{row}#{column + 1} off board" unless valid_row?(row) && valid_column?(column)
     end
 
