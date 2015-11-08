@@ -8,6 +8,10 @@ class Ship
     @hits = 0
   end
 
+  def hit
+    @hits += 1
+  end
+
   def alive?
     hits < max_hits
   end

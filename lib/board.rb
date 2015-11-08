@@ -35,8 +35,9 @@ class Board
       column = get_column(position)
       validiate_coordinates(row,column)
       # Returning new ships each time feels wrong
-
-      BOARD_KEY[GRID[row][column]]
+      target = BOARD_KEY[GRID[row][column]]
+      target.hit unless target.nil?
+      target
     end
 
     private
