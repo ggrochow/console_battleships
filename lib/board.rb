@@ -68,10 +68,7 @@ class Board
 
     private
     def insert_ship(ship)
-      positions = nil
-      until positions.is_a?(Array)
-        positions = get_valid_ship_positions(ship)
-      end
+      positions = get_valid_ship_positions(ship)
       place_ship_on_board(ship, positions)
     end
 
@@ -80,26 +77,27 @@ class Board
       end_position = start_position
       positions = [start_position]
       direction = random_direction
-      ship.length.times do
-        case direction
+      until ship.length + 1 == positions.size do
+         case direction
         when 'up'
           end_position[0] += 1
-          return false unless position_empty?(end_position)
+          break unless position_empty?(end_position)
           positions << end_position.clone
         when 'down'
           end_position[0] -= 1
-          return false unless position_empty?(end_position)
+          break unless position_empty?(end_position)
           positions << end_position.clone
         when 'right'
           end_position[1] += 1
-          return false unless position_empty?(end_position)
+          break unless position_empty?(end_position)
           positions << end_position.clone
         when 'left'
           end_position[1] -= 1
-          return false unless position_empty?(end_position)
+          break unless position_empty?(end_position)
           positions << end_position.clone
         end
       end
+      positions = get_valid_ship_positions(ship) unless ship.length + 1 == positions.size
       positions
     end
     
