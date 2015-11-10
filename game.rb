@@ -16,27 +16,30 @@ class Game
   end
 
   def play
-    begin
-      until Board.remaining_ships == []
-        report_player_attempts
-        user_input = get_position.upcase
-        target = player.fire(user_input)
-        status_report(target)
-      end
-    rescue Player::DuplicateTargetError => e
-      puts "#{e}, Please try again"
-      play
-    rescue Board::OffBoardError => e
-      puts "#{e}, Please try again"
-      play
-    rescue Player::NoShotsLeftError => e
+    until Board.remaining_ships == [] || !player.shots_left?
+      play_turn
+    end
+    if player.shots_left?
+      puts "You win, all ships destroyed"
+    else 
       puts Board.to_s
       puts "You lose, No ammo left"
     end
-    puts "You win, all ships destroyed" if Board.remaining_ships == [] 
   end
 
   private
+  def play_turn
+    report_player_attempts
+    user_input = get_position.upcase
+    unless Board.valid_coordinate?(user_input)
+      puts "Play #{user_input} off board"
+      return false
+    end
+    target = player.fire(user_input)
+    status_report(target)
+  end
+
+
   def report_player_attempts
     puts player.display_attempts
   end

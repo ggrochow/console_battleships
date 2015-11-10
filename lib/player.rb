@@ -16,7 +16,7 @@ class Player
     end
 
     def fire(coordinate)
-      if can_fire?(coordinate)
+      if can_fire?(coordinate) && new_target?(coordinate)
         target = Board.play(coordinate)
         @shots_fired += 1
         if target
@@ -43,6 +43,10 @@ class Player
 
     def shots_remaining
       MAX_SHOTS - shots_fired
+    end
+
+    def shots_left?
+      shots_fired < MAX_SHOTS
     end
 
     private
@@ -85,13 +89,7 @@ class Player
       coordinate[1..-1].to_i - 1
     end
 
-    def shots_left?
-      raise NoShotsLeftError unless shots_fired < MAX_SHOTS
-      shots_fired < MAX_SHOTS
-    end
-
     def new_target?(coordinate)
-      raise DuplicateTargetError, "You've already shot at #{coordinate}" if all_shots.include?(coordinate)
       !all_shots.include?(coordinate)
     end
 end
