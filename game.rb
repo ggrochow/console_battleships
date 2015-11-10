@@ -16,7 +16,6 @@ class Game
   end
 
   def play
-    puts Board.to_s
     until Board.remaining_ships == [] || !player.shots_left?
       play_turn
     end

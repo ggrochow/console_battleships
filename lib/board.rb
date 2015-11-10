@@ -55,10 +55,7 @@ class Board
 
     def insert_all_ships
       all_ships.each do |ship|
-        placed = insert_ship(ship)
-        until placed
-         placed = insert_ship(ship)
-        end
+        insert_ship(ship)
       end
     end
 
@@ -69,34 +66,13 @@ class Board
       valid_row?(row) && valid_column?(column)
     end
 
-    private # what a mess
+    private
     def insert_ship(ship)
-      start_position = [random_row, random_column]
-      end_position = start_position
-      positions = [start_position]
-      direction = random_direction
-      ship.length.times do # validates all random positions possible ship placement
-        case direction
-        when 'up'
-          end_position[0] += 1
-          return false unless position_empty?(end_position)
-          positions << end_position.clone
-        when 'down'
-          end_position[0] -= 1
-          return false unless position_empty?(end_position)
-          positions << end_position.clone
-        when 'right'
-          end_position[1] += 1
-          return false unless position_empty?(end_position)
-          positions << end_position.clone
-        when 'left'
-          end_position[1] -= 1
-          return false unless position_empty?(end_position)
-          positions << end_position.clone
-        end
+      positions = nil
+      until positions.is_a?(Array)
+        positions = get_valid_ship_positions(ship)
       end
       place_ship_on_board(ship, positions)
-      true
     end
 
     def get_valid_ship_positions(ship)
@@ -104,7 +80,7 @@ class Board
       end_position = start_position
       positions = [start_position]
       direction = random_direction
-      ship.length.times do # validates all random positions possible ship placement
+      ship.length.times do
         case direction
         when 'up'
           end_position[0] += 1
