@@ -1,7 +1,7 @@
 class Destroyer < Ship
 
   def initialize
-    super(4, 4)
+    super(3, 3)
     @symbol = 'D'
   end
 
