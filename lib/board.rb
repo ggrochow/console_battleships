@@ -56,7 +56,7 @@ class Board
     def insert_all_ships
       all_ships.each do |ship|
         placed = insert_ship(ship)
-        until placed == true 
+        until placed
          placed = insert_ship(ship)
         end
       end
@@ -95,12 +95,44 @@ class Board
           positions << end_position.clone
         end
       end
-      positions.each do |coordinates| # actually places the ships
-        GRID[coordinates[0]][coordinates[1]] = ship.symbol
-      end
+      place_ship_on_board(ship, positions)
       true
     end
+
+    def get_valid_ship_positions(ship)
+      start_position = [random_row, random_column]
+      end_position = start_position
+      positions = [start_position]
+      direction = random_direction
+      ship.length.times do # validates all random positions possible ship placement
+        case direction
+        when 'up'
+          end_position[0] += 1
+          return false unless position_empty?(end_position)
+          positions << end_position.clone
+        when 'down'
+          end_position[0] -= 1
+          return false unless position_empty?(end_position)
+          positions << end_position.clone
+        when 'right'
+          end_position[1] += 1
+          return false unless position_empty?(end_position)
+          positions << end_position.clone
+        when 'left'
+          end_position[1] -= 1
+          return false unless position_empty?(end_position)
+          positions << end_position.clone
+        end
+      end
+      positions
+    end
     
+    def place_ship_on_board(ship, positions)
+      positions.each do |coordinates|
+        GRID[coordinates[0]][coordinates[1]] = ship.symbol
+      end
+    end
+
     def random_direction
       ["up", "down", "left", "right"].sample
     end
@@ -118,9 +150,8 @@ class Board
     end
 
     def position_empty?(pos) 
-    # Checks if pos 1 is nil, and if actual position is not a ~
-    # returns false if space is either invalid or not empty
-      !(GRID[pos[0]].nil? || GRID[pos[0]][pos[1]] != "~")
+      return false unless valid_row?(pos[0]) && valid_column?(pos[1])
+      GRID[pos[0]][pos[1]] == "~"
     end
 
     def get_row(position)
