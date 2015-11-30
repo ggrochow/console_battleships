@@ -8,11 +8,13 @@ require_relative 'lib/board'
 
 class Game
 
+  # Break up In/Out messages to "Presenter?" class
+
   attr_reader :player
 
   def initialize
     @player = Player.new
-    Board.insert_all_ships
+    Board.randomly_place_all_ships
   end
 
   def play

@@ -17,8 +17,10 @@ class Player
 
     def fire(coordinate)
       if can_fire?(coordinate) && new_target?(coordinate)
+        # Gets target from board, either nil / ship object
         target = Board.play(coordinate)
         @shots_fired += 1
+        # misses return nil 
         if target
           add_hit(coordinate, target)
         else
@@ -32,11 +34,16 @@ class Player
 
     def display_attempts
       strings = attempt_map.clone
-      row_reference = ('A'..'G').to_a.insert(0, "*")
-      strings.insert(0, ((1..10).to_a)) # Adds column indicators
+      
+      # Generates and inserts row indicators to board      
+      strings.insert(0, ((1..10).to_a)) 
+
       strings.map.with_index do |array, index|
-        cloned_array = array.clone # clones array so attempt_map doenst get modified
-        cloned_array.insert(0, (row_reference[index])) # Adds row indicators
+        cloned_array = array.clone
+
+        # Generates and inserts column indicators to board
+        column_reference = ('A'..'G').to_a.insert(0, "*")
+        cloned_array.insert(0, (column_reference[index])) 
         cloned_array.join("  ")
       end.join("\n")
     end
@@ -73,6 +80,7 @@ class Player
       attempt_map[row][column] = "x"
     end
 
+    # Generates a hash of with letters corresponding to their respective index value
     def row_hash
       letters = ('A'..'G').to_a
       letters.reduce({}) do |hash, letter|
@@ -81,10 +89,12 @@ class Player
       end
     end
 
+    # Coordinates are passed in as a string ex: "A5" A returns the row
     def get_row(coordinate)
       row_hash[coordinate[0]]
     end
 
+    # Covers case of play on the 10th col
     def get_column(coordinate)
       coordinate[1..-1].to_i - 1
     end

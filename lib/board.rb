@@ -1,7 +1,4 @@
-require 'pry'
 class Board
-  class OffBoardError < StandardError
-  end
 
   MAX_X = 9
   MIN_X = 0
@@ -15,7 +12,7 @@ class Board
 
   BOARD_KEY  = { 'B' => BATTLESHIP, 'D' => DESTROYER, 'C' => CRUISER, 'S' => SUBMARINE, '~' => EMPTY }
 
-  GRID = [
+  GRID = [ 
     %w{~ ~ ~ ~ ~ ~ ~ ~ ~ ~},
     %w{~ ~ ~ ~ ~ ~ ~ ~ ~ ~},
     %w{~ ~ ~ ~ ~ ~ ~ ~ ~ ~},
@@ -28,20 +25,27 @@ class Board
   class << self
     def to_s
       strings = GRID.clone
-      row_reference = ('A'..'G').to_a.insert(0, "*")
-      strings.insert(0, ((1..10).to_a)) # Adds column indicators
+
+      # Adds row indicators along top of board
+      strings.insert(0, ((1..10).to_a))
+
       strings.map.with_index do |array, index|
-        cloned_array = array.clone # clones array so attempt_map doenst get modified
-        cloned_array.insert(0, (row_reference[index])) # Adds row indicators
+        cloned_array = array.clone 
+
+      # Adds column indicators along game board
+        column_reference = ('A'..'G').to_a.insert(0, "*")
+        cloned_array.insert(0, (column_reference[index]))
+
         cloned_array.join("  ")
       end.join("\n")
     end
 
+    # checks board to see if target is a valid ship, returning its value.
     def play(position)
       row = get_row(position)
       column = get_column(position)
       target = BOARD_KEY[GRID[row][column]]
-      target.hit unless target.nil?
+      target.hit if target
       target
     end
 
@@ -53,9 +57,9 @@ class Board
       all_ships.select { |ship| ship.alive? }
     end
 
-    def insert_all_ships
+    def randomly_place_all_ships
       all_ships.each do |ship|
-        insert_ship(ship)
+        randomly_place_ship(ship)
       end
     end
 
@@ -67,37 +71,36 @@ class Board
     end
 
     private
-    def insert_ship(ship)
-      positions = get_valid_ship_positions(ship)
+    def randomly_place_ship(ship)
+      positions = get_random_ship_positions(ship)
       place_ship_on_board(ship, positions)
     end
 
-    def get_valid_ship_positions(ship)
-      start_position = [random_row, random_column]
-      end_position = start_position
-      positions = [start_position]
+
+    def get_random_ship_positions(ship)
+      end_position = [random_row, random_column]
+      positions = []
       direction = random_direction
-      until ship.length + 1 == positions.size do
-         case direction
+
+      until ship.length == positions.size do
+
+        case direction
         when 'up'
           end_position[0] += 1
-          break unless position_empty?(end_position)
-          positions << end_position.clone
         when 'down'
           end_position[0] -= 1
-          break unless position_empty?(end_position)
-          positions << end_position.clone
         when 'right'
           end_position[1] += 1
-          break unless position_empty?(end_position)
-          positions << end_position.clone
         when 'left'
           end_position[1] -= 1
-          break unless position_empty?(end_position)
-          positions << end_position.clone
         end
+        break unless position_empty?(end_position)
+        positions << end_position.clone
       end
-      positions = get_valid_ship_positions(ship) unless ship.length + 1 == positions.size
+
+      # Checks to see if it has enough valid positions to place the full ship
+      # Calling itself again to start the process over if not
+      positions = get_random_ship_positions(ship) unless ship.length == positions.size
       positions
     end
     

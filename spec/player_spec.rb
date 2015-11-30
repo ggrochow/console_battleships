@@ -7,16 +7,16 @@ describe Player do
   describe '#fire' do
     it "should not fire a shot at an already hit posititon" do
       expect(@player).to receive(:hits).and_return(["A4"])
-      expect{ @player.fire('A4') }.to raise_error(Player::DuplicateTargetError)
+      @player.fire('A4')
       expect(@player.shots_fired).to eq(0)
     end
     it "should not fire a shot at an already missed posititon" do
       expect(@player).to receive(:misses).and_return(["B3"])
-      expect{ @player.fire('B3') }.to raise_error(Player::DuplicateTargetError)
+      @player.fire('B3')
       expect(@player.shots_fired).to eq(0)
     end
     it 'should not fire a shot if targetting a position of the board' do 
-      expect { @player.fire('Z14') }.to raise_error(Board::OffBoardError)
+      @player.fire('Z14')
       expect(@player.shots_fired).to eq(0)
     end
   end
